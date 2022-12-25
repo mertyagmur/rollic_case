@@ -1,0 +1,27 @@
+volumes:
+  rollic-vol:
+
+services:
+
+  pgsql:
+    image: postgres:12.11
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: rollic123
+      POSTGRES_USER: rollic
+      POSTGRES_DB: rollic_case
+    volumes:
+      - rollic-vol:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  python:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    depends_on:
+      - pgsql
+    ports:
+      - 8080:5000
+    volumes:
+      - ./rollic_api:/usr/src/rollic_api

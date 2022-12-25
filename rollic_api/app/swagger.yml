@@ -1,0 +1,118 @@
+# swagger.yml
+
+openapi: 3.0.0
+info:
+  title: "Rollic Flask REST API"
+  description: "A REST API created for Rollic Games case study by Mert Yagmur"
+  version: "1.0.0"
+
+servers:
+  - url: "/"
+
+components:
+  schemas:
+    User:
+      type: "object"
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+  parameters:
+    id:
+      name: "id"
+      description: "ID of the user to get"
+      in: path
+      required: True
+      schema:
+        type: "integer"
+
+paths:
+  /users:
+    get:
+      operationId: "app.user.get_all"
+      tags:
+        - "Users"
+      summary: "Get all users"
+      responses:
+        "200":
+          description: "Successfully got all users"
+    put:
+      operationId: "app.user.create"
+      tags:
+        - Users
+      summary: "Create a user"
+      requestBody:
+          description: "User to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "user"
+                $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "Successfully created user"
+        "400":
+          description: "Request body or parameters are wrong"
+        "403":
+          description: "User already exists"
+        "500":
+          description: "Something unexpected happened"
+  /users/{id}:
+    get:
+      operationId: "app.user.get_one"
+      tags:
+        - Users
+      summary: "Get one user"
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: "Successfully got user"
+        "404":
+          description: "User with that id does not exist"
+        "500":
+          description: "Something unexpected happened"
+    put:
+      tags:
+        - Users
+      operationId: "app.user.update"
+      summary: "Update a user"
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: "Successfully updated user"
+        "400":
+          description: "Request body or parameters are wrong"
+        "404":
+          description: "User with that id does not exist"
+        "500":
+          description: "Something unexpected happened"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "user"
+              $ref: "#/components/schemas/User"
+    delete:
+      tags:
+        - Users
+      operationId: "app.user.delete"
+      summary: "Delete a user"
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: "Successfully deleted user"
+        "404":
+          description: "User with that id does not exist"
+        "500":
+          description: "Something unexpected happened"
